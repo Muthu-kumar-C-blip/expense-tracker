@@ -1,0 +1,43 @@
+<!-- pages/register.html -->
+<div class="auth-page">
+
+  <button class="dark-toggle auth-theme-btn" ng-click="toggleTheme()" style="border:none;">
+    <div class="toggle-track"><div class="toggle-thumb"></div></div>
+    <span>{{ theme === 'dark' ? 'Light' : 'Dark' }}</span>
+  </button>
+
+  <div class="auth-box">
+    <div class="auth-logo">
+      <div class="logo-icon" style="width:48px;height:48px;font-size:22px;border-radius:14px;margin:0 auto 10px;">💸</div>
+      <h1>Xpense<span>IQ</span></h1>
+      <p>Create your account to get started</p>
+    </div>
+
+    <div class="form-grid">
+      <div class="form-group">
+        <label class="form-label">Full Name</label>
+        <input class="form-input" type="text" ng-model="data.name" placeholder="Your name">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Email</label>
+        <input class="form-input" type="email" ng-model="data.email" placeholder="you@example.com">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Password</label>
+        <input class="form-input" type="password" ng-model="data.password"
+               placeholder="Min 6 characters" ng-keyup="$event.keyCode === 13 && register()">
+      </div>
+
+      <div class="msg" ng-class="msgType" ng-show="message">{{ message }}</div>
+
+      <button class="btn btn-primary btn-full" ng-click="register()" ng-disabled="loading">
+        <span ng-if="!loading">Create Account →</span>
+        <span ng-if="loading" class="spinner"></span>
+      </button>
+    </div>
+
+    <div class="auth-switch">
+      Already have an account? <a href="#/login">Sign in</a>
+    </div>
+  </div>
+</div>

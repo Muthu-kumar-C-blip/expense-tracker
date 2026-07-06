@@ -1,0 +1,56 @@
+<!-- pages/add-expense.html -->
+<div style="padding:28px;">
+  <div style="max-width:580px;margin:0 auto;">
+    <div class="card">
+      <div class="card-header">
+        <span class="card-title">{{ isEdit ? '✏️ Edit Expense' : '➕ Add Expense' }}</span>
+        <button class="btn btn-secondary btn-sm" ng-click="cancel()">← Cancel</button>
+      </div>
+      <div class="card-body">
+        <div class="form-grid">
+
+          <div class="form-group">
+            <label class="form-label">Expense Title</label>
+            <input class="form-input" type="text" ng-model="expense.title"
+                   placeholder="e.g. Lunch, Bus ticket, Electricity bill">
+          </div>
+
+          <div class="form-row">
+            <div class="form-group">
+              <label class="form-label">Amount (₹)</label>
+              <input class="form-input" type="number" ng-model="expense.amount"
+                     placeholder="0.00" min="0" step="0.01">
+            </div>
+            <div class="form-group">
+              <label class="form-label">Date</label>
+              <input class="form-input" type="date" ng-model="expense.expense_date">
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Category</label>
+            <select class="form-input" ng-model="expense.category">
+              <option value="">Select category</option>
+              <option value="Food">🍔 Food</option>
+              <option value="Travel">✈️ Travel</option>
+              <option value="Bills">🧾 Bills</option>
+              <option value="Shopping">🛍️ Shopping</option>
+              <option value="Other">📦 Other</option>
+            </select>
+          </div>
+
+          <div class="msg" ng-class="msgType" ng-show="message">{{ message }}</div>
+
+          <div style="display:flex;gap:10px;">
+            <button class="btn btn-primary" style="flex:1;" ng-click="submit()" ng-disabled="loading">
+              <span ng-if="!loading">{{ isEdit ? '💾 Update Expense' : '💾 Save Expense' }}</span>
+              <span ng-if="loading" class="spinner"></span>
+            </button>
+            <button class="btn btn-secondary" ng-click="reset()">Clear</button>
+          </div>
+
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

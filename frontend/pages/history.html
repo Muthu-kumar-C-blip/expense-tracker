@@ -1,0 +1,84 @@
+<!-- pages/history.html -->
+<div style="padding:28px;">
+  <div class="card">
+
+    <!-- Filter Bar -->
+    <div class="filter-bar">
+      <input class="form-input" type="text" ng-model="search"
+             placeholder="🔍 Search title..." ng-change="applyFilters()"
+             style="min-width:180px;max-width:200px;">
+
+      <select class="form-input" ng-model="filterCat" ng-change="applyFilters()" style="max-width:150px;">
+        <option value="">All Categories</option>
+        <option value="Food">Food</option>
+        <option value="Travel">Travel</option>
+        <option value="Bills">Bills</option>
+        <option value="Shopping">Shopping</option>
+        <option value="Other">Other</option>
+      </select>
+
+      <input class="form-input" type="date" ng-model="filterDate"
+             ng-change="applyFilters()" style="max-width:160px;">
+
+      <input class="form-input" type="month" ng-model="filterMon"
+             ng-change="applyFilters()" style="max-width:160px;">
+
+      <button class="btn btn-secondary btn-sm" ng-click="clearFilters()">✕ Clear</button>
+
+      <div style="margin-left:auto;display:flex;align-items:center;gap:10px;">
+        <span style="font-size:12px;color:var(--text-muted)">{{ filtered.length }} entries</span>
+        <button class="btn btn-pdf btn-sm" ng-click="downloadPDF()">⬇️ PDF</button>
+      </div>
+    </div>
+
+    <!-- Loading -->
+    <div ng-if="loading" class="empty-state"><div class="icon">⏳</div><p>Loading...</p></div>
+
+    <!-- Empty -->
+    <div ng-if="!loading && filtered.length === 0" class="empty-state">
+      <div class="icon">🔍</div><p>No matching expenses found</p>
+    </div>
+
+    <!-- Table -->
+    <div ng-if="!loading && filtered.length > 0" style="overflow-x:auto;">
+      <table class="expense-table">
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Title</th>
+            <th>Category</th>
+            <th>Date</th>
+            <th>Amount</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="e in filtered">
+            <td style="color:var(--text-muted);font-size:12px">{{ $index + 1 }}</td>
+            <td><strong>{{ e.title }}</strong></td>
+            <td>
+              <span class="category-badge" ng-class="badgeClass(e.category)">{{ e.category }}</span>
+            </td>
+            <td style="color:var(--text-muted);font-size:13px">{{ formatDate(e.expense_date) }}</td>
+            <td class="amount-cell" style="color:var(--accent)">₹{{ e.amount | number:2 }}</td>
+            <td>
+              <div style="display:flex;gap:6px;">
+                <button class="btn btn-secondary btn-sm" ng-click="editExpense(e.id)">✏️</button>
+                <button class="btn btn-danger btn-sm"    ng-click="deleteExpense(e.id)">🗑️</button>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <!-- Footer Total -->
+    <div style="padding:14px 22px;border-top:1px solid var(--border);display:flex;justify-content:space-between;align-items:center;">
+      <span style="font-size:13px;color:var(--text-muted);">Filtered Total</span>
+      <span style="font-size:18px;font-weight:700;font-family:'JetBrains Mono',monospace;color:var(--accent);">
+        ₹{{ filteredTotal | number:2 }}
+      </span>
+    </div>
+
+  </div>
+</div>

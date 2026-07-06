@@ -1,0 +1,120 @@
+<!-- pages/reports.html -->
+<div style="padding:28px;">
+
+  <!-- Month Selector -->
+  <div class="card">
+    <div class="card-header"><span class="card-title">Select Month</span></div>
+    <div class="card-body" style="padding:14px 22px;">
+      <div class="month-tabs">
+        <button class="month-tab"
+                ng-repeat="m in months"
+                ng-class="{active: m.key === selectedMonth}"
+                ng-click="selectMonth(m.key)">
+          {{ m.label }}
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Report Stats -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-icon purple">💰</div>
+      <div>
+        <div class="stat-label">Total Spent</div>
+        <div class="stat-value">₹{{ reportTotal | number:0 }}</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon cyan">📝</div>
+      <div>
+        <div class="stat-label">Transactions</div>
+        <div class="stat-value">{{ reportCount }}</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon orange">📊</div>
+      <div>
+        <div class="stat-label">Avg per Entry</div>
+        <div class="stat-value">₹{{ reportAvg | number:0 }}</div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-icon green">🏆</div>
+      <div>
+        <div class="stat-label">Top Category</div>
+        <div class="stat-value" style="font-size:16px;font-family:'Sora',sans-serif;">{{ topCat }}</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Category + Chart -->
+  <div class="grid-2">
+
+    <div class="card">
+      <div class="card-header"><span class="card-title">Category Breakdown</span></div>
+      <div class="card-body">
+
+        <div ng-if="catBreakdown.length === 0" class="empty-state">
+          <div class="icon">📭</div><p>No data this month</p>
+        </div>
+
+        <div ng-repeat="cat in catBreakdown"
+             style="display:flex;align-items:center;gap:12px;padding:12px;background:var(--surface2);border-radius:10px;border:1px solid var(--border);margin-bottom:10px;">
+          <div style="width:10px;height:10px;border-radius:50%;flex-shrink:0;" ng-style="{background: cat.color}"></div>
+          <div style="flex:1;">
+            <div style="font-size:12px;color:var(--text-muted);">{{ cat.name }}</div>
+            <div style="font-size:16px;font-weight:700;font-family:'JetBrains Mono',monospace;">₹{{ cat.amount | number:0 }}</div>
+            <div class="progress-wrap">
+              <div class="progress-fill" ng-style="{width: cat.pct+'%', background: cat.color}"></div>
+            </div>
+          </div>
+          <span style="font-size:11px;color:var(--text-muted);font-weight:600;">{{ cat.pct }}%</span>
+        </div>
+
+      </div>
+    </div>
+
+    <div class="card">
+      <div class="card-header"><span class="card-title">Distribution</span></div>
+      <div class="card-body">
+        <div class="chart-wrap"><canvas id="chart-report"></canvas></div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Expense Table -->
+  <div class="card">
+    <div class="card-header">
+      <span class="card-title">{{ selectedMonth }} — Expenses</span>
+      <button class="btn btn-pdf btn-sm" ng-click="downloadPDF()">⬇️ Download PDF</button>
+    </div>
+
+    <div ng-if="loading" class="empty-state"><div class="icon">⏳</div><p>Loading...</p></div>
+
+    <div ng-if="!loading && reportExpenses.length === 0" class="empty-state">
+      <div class="icon">📭</div><p>No expenses this month</p>
+    </div>
+
+    <div ng-if="!loading && reportExpenses.length > 0" style="overflow-x:auto;">
+      <table class="expense-table">
+        <thead>
+          <tr>
+            <th>#</th><th>Title</th><th>Category</th><th>Date</th><th>Amount</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="e in reportExpenses">
+            <td style="color:var(--text-muted);font-size:12px">{{ $index + 1 }}</td>
+            <td><strong>{{ e.title }}</strong></td>
+            <td><span class="category-badge" ng-class="badgeClass(e.category)">{{ e.category }}</span></td>
+            <td style="color:var(--text-muted);font-size:13px">{{ formatDate(e.expense_date) }}</td>
+            <td class="amount-cell" style="color:var(--accent)">₹{{ e.amount | number:2 }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</div>
